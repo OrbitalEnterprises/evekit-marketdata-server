@@ -24,6 +24,6 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
     // Start listener
     var port = process.env.PORT || 10010;
-    app.listen(port);
+    app.listen(port, "localhost");
     console.log("Listening on port: " + port);
 });
