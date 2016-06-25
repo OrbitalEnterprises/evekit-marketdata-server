@@ -3,11 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "description": "EveKit MarketData Server",
-  "keywords": ["EveKit", "EVE Online"],
+  "keywords": [
+    "EveKit",
+    "EVE Online"
+  ],
   "author": "deadlybulb@orbital.enterprises",
   "license": "MIT",
   "main": "app.js",
   "dependencies": {
+    "async": "^2.0.0-rc.6",
     "express": "^4.12.3",
     "swagger-express-mw": "^0.1.0"
   },
