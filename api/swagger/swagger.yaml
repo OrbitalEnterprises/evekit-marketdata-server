@@ -1,0 +1,156 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: EveKit MarketData Server
+host: "localhost:10010"
+basePath: "/"
+tags:
+  - name: "MarketData"
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /history:
+    x-swagger-router-controller: history_service
+    get:
+      tags:
+        - "MarketData"
+      description: Retrieve market history data for the given type, region and date
+      operationId: history
+      parameters:
+        - name: type
+          in: query
+          description: Market type for which history will be retrieved
+          required: true
+          type: integer
+        - name: region
+          in: query
+          description: Market region for which history will be retrieved
+          required: true
+          type: integer
+        - name: date
+          in: query
+          description: Date on which to retrieve history information.  Can be milliseconds since the epoch, or any time parseable by Javascript Date
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Market history
+          schema:
+            $ref: "#/definitions/HistoryResponse"
+        "404":
+          description: Requested region, type or date not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /book:
+    x-swagger-router-controller: book_service
+    get:
+      tags:
+        - "MarketData"
+      description: Retrieve order book for the given type, region and closest to the given date/time.  The order book returned is the most recent order book recorded before the target time.
+      operationId: book
+      parameters:
+        - name: type
+          in: query
+          description: Market type for which order book will be retrieved
+          required: true
+          type: integer
+        - name: region
+          in: query
+          description: Market region for which order book will be retrieved
+          required: true
+          type: integer
+        - name: date
+          in: query
+          description: Date and time at which order book will be retrieved.  Can be milliesconds since the epoch, or any time parseable by Javascript Date
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Order book
+          schema:
+            type: object
+            properties:
+              bookTime:
+                type: integer
+                format: int64
+              orders:
+                type: array
+                items:
+                  $ref: "#/definitions/BookResponse"
+        "404":
+          description: Requested region, type or date not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  # This endpoint will provide swagger config file for clients
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  HistoryResponse:
+    properties:
+      typeID:
+        type: integer
+      regionID:
+        type: integer
+      orderCount:
+        type: integer
+      lowPrice:
+        type: number
+      highPrice:
+        type: number
+      avgPrice:
+        type: number
+      volume:
+        type: integer
+        format: int64
+      date:
+        type: integer
+        format: int64
+  BookResponse:
+    properties:
+      typeID:
+        type: integer
+      regionID:
+        type: integer
+      orderID:
+        type: integer
+        format: int64
+      buy:
+        type: boolean
+      issued:
+        type: integer
+        format: int64
+      price:
+        type: number
+      volumeEntered:
+        type: integer
+      minVolume:
+        type: integer
+      volume:
+        type: integer
+      orderRange:
+        type: string
+      locationID:
+        type: integer
+        format: int64
+      duration:
+        type: integer
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
