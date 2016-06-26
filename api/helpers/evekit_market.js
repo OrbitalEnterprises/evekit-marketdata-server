@@ -308,6 +308,7 @@ OrderBook.lookup = function(typeID, regionID, dt, cb) {
 			    cb(null, null);
 			} else {
 			    // Return the order book we found
+			    // Note that archived books are already sorted
 			    cb(null, new OrderBook(bestBookTime, bestBookOrders));
 			}
 		    });		    

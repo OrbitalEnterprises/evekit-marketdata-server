@@ -83,7 +83,29 @@ function book(req, res) {
                     });
                     rl.on('close', function() {
 			// Return the book we found.  Could be empty if this type had no orders at the requested time.
-			var bookResult = new ekmd.OrderBook(bestTime, orders);
+			// Raw snaps don't sort orders, so do that here.
+			// bids from highest to lowest price
+			// asks from lowest to highest price
+			var bids = []
+			var asks = []
+			for (var i = 0; i < orders.length; i++) {
+			    if (orders[i].buy) {
+				bids.push(orders[i]);
+			    } else {
+				asks.push(orders[i]);
+			    }
+			}
+			bids.sort(function(a, b) {
+			    if (a.price > b.price) return -1;
+			    if (a.price < b.price) return 1;
+			    return 0;
+			});
+			asks.sort(function(a, b) {
+			    if (a.price > b.price) return 1;
+			    if (a.price < b.price) return -1;
+			    return 0;
+			});			    
+			var bookResult = new ekmd.OrderBook(bestTime, bids.concat(asks));
 			res.status(200).json(bookResult);
 			return;
                     });
