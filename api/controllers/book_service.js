@@ -34,7 +34,7 @@ function book(req, res) {
 	tzOffset = dateObj.getTimezoneOffset();
     }
     // Extract millis since epoch, converting for timezone if the date was parsed
-    var dateTime = dateObj.getTime() - (tzOffset * 60 * 1000);
+    var dateTime = dateObj.getTime() + (tzOffset * 60 * 1000);
     // If the requested type and region exist in a local snapshot file, then return the appropriate order book from that file
     var regionLocation = process.env.SNAP_DIR + "/regions/" + regionID + "/";
     async.waterfall([

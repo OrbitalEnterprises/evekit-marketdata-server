@@ -156,7 +156,7 @@ function Order(opt_line) {
     this.typeID = parseInt(data[1]);
     this.regionID = parseInt(data[0]);
     this.orderID = parseInt(data[2]);
-    this.buy = (new Boolean(data[3])).valueOf();
+    this.buy = (data[3] === 'true');
     this.issued = parseInt(data[4]);
     this.price = parseFloat(data[5]);
     this.volumeEntered = parseInt(data[6]);
