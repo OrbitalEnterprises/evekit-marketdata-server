@@ -2,12 +2,11 @@ swagger: "2.0"
 info:
   version: "0.0.1"
   title: EveKit MarketData Server
-host: "localhost:10010"
+host: "evekit-market.orbital.enterprises"
 basePath: "/"
 tags:
   - name: "MarketData"
 schemes:
-  - http
   - https
 consumes:
   - application/json
@@ -22,12 +21,12 @@ paths:
       description: Retrieve market history data for the given type, region and date
       operationId: history
       parameters:
-        - name: type
+        - name: typeID
           in: query
           description: Market type for which history will be retrieved
           required: true
           type: integer
-        - name: region
+        - name: regionID
           in: query
           description: Market region for which history will be retrieved
           required: true
@@ -58,12 +57,12 @@ paths:
       description: Retrieve order book for the given type, region and closest to the given date/time.  The order book returned is the most recent order book recorded before the target time.
       operationId: book
       parameters:
-        - name: type
+        - name: typeID
           in: query
           description: Market type for which order book will be retrieved
           required: true
           type: integer
-        - name: region
+        - name: regionID
           in: query
           description: Market region for which order book will be retrieved
           required: true
@@ -100,6 +99,7 @@ paths:
 # complex objects have schema definitions
 definitions:
   HistoryResponse:
+    type: object
     properties:
       typeID:
         type: integer
@@ -120,6 +120,7 @@ definitions:
         type: integer
         format: int64
   BookResponse:
+    type: object
     properties:
       typeID:
         type: integer
@@ -149,6 +150,7 @@ definitions:
       duration:
         type: integer
   ErrorResponse:
+    type: object
     required:
       - message
     properties:

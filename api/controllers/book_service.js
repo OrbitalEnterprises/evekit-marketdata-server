@@ -14,8 +14,8 @@ module.exports = {
 };
 
 function book(req, res) {
-    var typeID = req.swagger.params.type.value || -1;
-    var regionID = req.swagger.params.region.value || -1;
+    var typeID = req.swagger.params.typeID.value || -1;
+    var regionID = req.swagger.params.regionID.value || -1;
     var date = req.swagger.params.date.value || String(Date.now());
     // Convert date to an instance of Date.  We accept the following formats:
     // 1. Any date format parseable by Javascript Date
