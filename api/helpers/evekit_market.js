@@ -168,11 +168,15 @@ function Order(opt_line) {
 }
 
 // OrderBook class
-function OrderBook(opt_tm, opt_orders) {
+function OrderBook(opt_tm, opt_orders, opt_typeid, opt_regionid) {
     opt_tm = opt_tm || 0;
     opt_orders = opt_orders || [];
+    opt_typeid = opt_typeid || 0;
+    opt_regionid = opt_regionid || 0;
     this.bookTime = opt_tm;
     this.orders = opt_orders;
+    this.typeID = opt_typeid;
+    this.regionID = opt_regionid;
 }
 
 /**
@@ -309,7 +313,7 @@ OrderBook.lookup = function(typeID, regionID, dt, cb) {
 			} else {
 			    // Return the order book we found
 			    // Note that archived books are already sorted
-			    cb(null, new OrderBook(bestBookTime, bestBookOrders));
+			    cb(null, new OrderBook(bestBookTime, bestBookOrders, typeID, regionID));
 			}
 		    });		    
                 });

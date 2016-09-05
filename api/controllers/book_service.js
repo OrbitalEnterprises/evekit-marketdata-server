@@ -105,7 +105,7 @@ function book(req, res) {
 			    if (a.price < b.price) return -1;
 			    return 0;
 			});			    
-			var bookResult = new ekmd.OrderBook(bestTime, bids.concat(asks));
+			var bookResult = new ekmd.OrderBook(bestTime, bids.concat(asks), typeID, regionID);
 			res.status(200).json(bookResult);
 			return;
                     });

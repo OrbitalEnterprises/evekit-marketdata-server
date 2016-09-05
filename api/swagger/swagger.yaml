@@ -81,12 +81,71 @@ paths:
               bookTime:
                 type: integer
                 format: int64
+              typeID:
+                type: integer
+                format: int32
+              regionID:
+                type: integer
+                format: int32
               orders:
                 type: array
                 items:
                   $ref: "#/definitions/BookResponse"
         "404":
           description: Requested region, type or date not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  # Specialized endpoint for retrieving the latest set of books for a single region and list of types
+  # This endpoint is optimized for live report generation and optimization
+  /livebook:
+    x-swagger-router-controller: livebook_service
+    get:
+      tags:
+        - "MarketData"
+      description: Retrieve latest order books for the list of types in the given region.
+      operationId: livebook
+      parameters:
+        - name: typeID
+          in: query
+          description: List of market types for which order books will be retrieved
+          required: true
+          type: array
+          items:
+            type: integer
+            format: int32
+        - name: regionID
+          in: query
+          description: Market region for which order book will be retrieved
+          required: true
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Order book list
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                bookTime:
+                  type: integer
+                  format: int64
+                typeID:
+                  type: integer
+                  format: int32
+                regionID:
+                  type: integer
+                  format: int32
+                orders:
+                  type: array
+                  items:
+                    $ref: "#/definitions/BookResponse"
+        "404":
+          description: Requested region or one of the requested types not found
           schema:
             $ref: "#/definitions/ErrorResponse"
         default:
