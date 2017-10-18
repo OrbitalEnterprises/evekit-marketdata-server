@@ -336,7 +336,47 @@ OrderBook.lookup = function(typeID, regionID, dt, cb) {
     });
 }
 
+// StructureOrder class
+function StructureOrder(structureID, opt_line) {
+    // order_id,type_id,location_id,volume_total,volume_remain,min_volume,price,is_buy_order,duration,issued,range
+    opt_line = opt_line || "0,0,0,0,0,0,0,false,0,0,region";
+    var data = opt_line.split(',');
+    this.typeID = parseInt(data[1]);
+    this.structureID = structureID;
+    this.orderID = parseInt(data[0]);
+    this.buy = (data[7] === 'true');
+    this.issued = new Date(data[9].replace(/"/g, ''));
+    this.price = parseFloat(data[6]);
+    this.volumeEntered = parseInt(data[3]);
+    this.minVolume = parseInt(data[5]);
+    this.volume = parseInt(data[4]);
+    this.orderRange = data[10];
+    this.locationID = parseInt(data[2]);
+    this.duration = parseInt(data[8]);
+    // Handle date parsing issues
+    if (this.issued == 'Invalid Date' || this.issued == NaN) {
+	console.log("Error parsing structure book date: " + data[9]);
+	this.issued = new Date();
+    }
+    this.issued = this.issued.getTime();
+    // Dequote range if quoted
+    this.orderRange = this.orderRange.replace(/"/g, '');
+}
+
+// StructureOrderBook class
+function StructureOrderBook(opt_tm, opt_orders, opt_typeid, opt_structureid) {
+    opt_tm = opt_tm || 0;
+    opt_orders = opt_orders || [];
+    opt_typeid = opt_typeid || 0;
+    opt_structureid = opt_structureid || 0;
+    this.bookTime = opt_tm;
+    this.orders = opt_orders;
+    this.typeID = opt_typeid;
+    this.structureID = opt_structureid;
+}
+
 exports.MarketHistory = MarketHistory;
 exports.OrderBook = OrderBook;
 exports.Order = Order;
-
+exports.StructureOrder = StructureOrder;
+exports.StructureOrderBook = StructureOrderBook;
