@@ -152,6 +152,59 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  # Specialized endpoint for retrieving the latest set of books for a single structure and list of types
+  # This endpoint is optimized for live report generation and optimization
+  /livestructure:
+    x-swagger-router-controller: livestructure_service
+    get:
+      tags:
+        - "MarketData"
+      description: Retrieve latest order books for the list of types in the given structure (citadel).
+      operationId: livestructure
+      parameters:
+        - name: typeID
+          in: query
+          description: List of market types for which order books will be retrieved
+          required: true
+          type: array
+          items:
+            type: integer
+            format: int32
+        - name: structureID
+          in: query
+          description: Structure for which order book will be retrieved
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Order book list
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                bookTime:
+                  type: integer
+                  format: int64
+                typeID:
+                  type: integer
+                  format: int32
+                structureID:
+                  type: integer
+                  format: int64
+                orders:
+                  type: array
+                  items:
+                    $ref: "#/definitions/StructureBookResponse"
+        "404":
+          description: Requested structure or one of the requested types not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   # This endpoint will provide swagger config file for clients
   /swagger:
     x-swagger-pipe: swagger_raw
@@ -185,6 +238,37 @@ definitions:
         type: integer
       regionID:
         type: integer
+      orderID:
+        type: integer
+        format: int64
+      buy:
+        type: boolean
+      issued:
+        type: integer
+        format: int64
+      price:
+        type: number
+      volumeEntered:
+        type: integer
+      minVolume:
+        type: integer
+      volume:
+        type: integer
+      orderRange:
+        type: string
+      locationID:
+        type: integer
+        format: int64
+      duration:
+        type: integer
+  StructureBookResponse:
+    type: object
+    properties:
+      typeID:
+        type: integer
+      structureID:
+        type: integer
+        format: int64
       orderID:
         type: integer
         format: int64
